@@ -80,42 +80,48 @@
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 20px;
       margin-top: 48px;
     }
     .service-card {
       position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 26px 24px;
-      border-radius: 18px;
-      background: linear-gradient(160deg, var(--surface-2), var(--noir-2));
-      border: 1px solid rgba(201,168,76,0.22);
+      justify-content: flex-end;
+      gap: 10px;
+      min-height: 230px;
+      padding: 22px;
+      border-radius: 20px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(201,168,76,0.28);
+      text-decoration: none;
+      isolation: isolate;
       transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    }
+    .service-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.4) 100%);
+    }
+    .service-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: rgba(201,168,76,0.08);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
     }
     .service-card:hover {
       transform: translateY(-6px);
       border-color: rgba(201,168,76,0.6);
-      box-shadow: 0 16px 48px rgba(201,168,76,0.16);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
     }
-    .service-card__top {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .service-card__icon {
-      width: 46px;
-      height: 46px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: rgba(201,168,76,0.14);
-      border: 1px solid rgba(201,168,76,0.3);
-      font-size: 22px;
-    }
+    .service-card:hover::after { opacity: 1; }
     .service-card__num {
       font-family: var(--sans);
       font-size: 10px;
@@ -123,20 +129,21 @@
       letter-spacing: 0.14em;
       color: var(--gold);
       text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .service-card__title {
       font-family: var(--serif);
-      font-size: 20px;
+      font-size: 22px;
       color: var(--cream);
-      line-height: 1.15;
-      margin-top: 2px;
+      line-height: 1.12;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
     }
     .service-card__text {
       font-family: var(--sans);
       font-size: 13.5px;
-      color: var(--cream-3);
+      color: var(--cream-4);
       line-height: 1.5;
-      flex: 1;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
     }
     .service-card__btn {
       display: inline-flex;
@@ -151,11 +158,19 @@
       background: linear-gradient(135deg, var(--gold), var(--gold-2));
       padding: 11px 18px;
       border-radius: 10px;
+      margin-top: 4px;
       transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
     }
     .service-card__btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 28px rgba(201,168,76,0.38);
+    }
+    @media (max-width: 980px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { min-height: 200px; }
     }
 
     .marquee {
@@ -366,43 +381,37 @@
         <p class="services-grid__lead">Escolha o serviço e fale direto com um especialista. Sem menus escondidos e sem intermediários.</p>
       </div>
       <div class="services-grid">
-        <a class="service-card reveal" href="pintura/">
-          <span class="service-card__icon">🎨</span>
+        <a class="service-card reveal" href="pintura/" style="background-image:url('assets/images/card-pintura.jpg');">
           <span class="service-card__num">01</span>
           <h3 class="service-card__title">Pintura Profissional Premium</h3>
           <p class="service-card__text">Emassamento técnico, mascaramento total e pintura airless com acabamento fino impecável.</p>
           <span class="service-card__btn">Acessar →</span>
         </a>
-        <a class="service-card reveal" href="eletrica/">
-          <span class="service-card__icon">⚡</span>
+        <a class="service-card reveal" href="eletrica/" style="background-image:url('assets/images/card-eletrica.webp');">
           <span class="service-card__num">02</span>
           <h3 class="service-card__title">Elétrica e Iluminação Técnica</h3>
           <p class="service-card__text">Quadros organizados, iluminação LED embutida, passagem de cabos e adequação NBR.</p>
           <span class="service-card__btn">Acessar →</span>
         </a>
-        <a class="service-card reveal" href="ar-condicionado/">
-          <span class="service-card__icon">❄️</span>
+        <a class="service-card reveal" href="ar-condicionado/" style="background-image:url('assets/images/card-ar.webp');">
           <span class="service-card__num">03</span>
           <h3 class="service-card__title">Ar-Condicionado e Climatização</h3>
           <p class="service-card__text">Split e VRF com cobre embutido, teste de estanqueidade, higienização e manutenção.</p>
           <span class="service-card__btn">Acessar →</span>
         </a>
-        <a class="service-card reveal" href="moveis-planejados/">
-          <span class="service-card__icon">🪚</span>
+        <a class="service-card reveal" href="moveis-planejados/" style="background-image:url('assets/images/card-moveis.jpg');">
           <span class="service-card__num">04</span>
           <h3 class="service-card__title">Móveis Planejados Sob Medida</h3>
           <p class="service-card__text">Marcenaria nobre, alinhamento milimétrico de portas/gavetas e ferragens amortecidas.</p>
           <span class="service-card__btn">Acessar →</span>
         </a>
-        <a class="service-card reveal" href="drywall-gesso/">
-          <span class="service-card__icon">🧱</span>
+        <a class="service-card reveal" href="drywall-gesso/" style="background-image:url('assets/images/card-drywall.jpg');">
           <span class="service-card__num">05</span>
           <h3 class="service-card__title">Drywall, Forros e Gesso Liso</h3>
           <p class="service-card__text">Divisórias acústicas, forros rebaixados para iluminação, sancas e gesso liso.</p>
           <span class="service-card__btn">Acessar →</span>
         </a>
-        <a class="service-card reveal" href="limpeza-pos-obra/">
-          <span class="service-card__icon">🧹</span>
+        <a class="service-card reveal" href="limpeza-pos-obra/" style="background-image:url('assets/images/card-limpeza.webp');">
           <span class="service-card__num">06</span>
           <h3 class="service-card__title">Limpeza Pós-Obra Completa</h3>
           <p class="service-card__text">Remoção técnica de respingos, rejuntes e poeira fina. Entrega pronta para morar.</p>
