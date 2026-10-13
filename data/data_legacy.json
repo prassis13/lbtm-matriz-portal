@@ -1,0 +1,25 @@
+{
+  "empresa": "LBTM Incorporadora",
+  "slogan": "Manutenções em Geral",
+  "responsavel": "Leandro Barbieri",
+  "contatos": {
+    "telefones": ["11955906120", "11981893394"],
+    "email": "lbtmvendas.instalacoes@gmail.com",
+    "instagram": "@lbtmofc"
+  },
+  "diferenciais": [
+    "Emissão de ART para sua obra",
+    "Pagamento no cartão"
+  ],
+  "servicos": [
+    "Eletricista e Iluminação Técnica",
+    "Pintura, Restauração e Fachada",
+    "Ar-condicionado (Instalação, Higienização e Manutenção)",
+    "Drywall, Forro, Sanca e Gesso Liso",
+    "Limpeza Pós-Obra (Simples e Completa)",
+    "Móveis Planejados Sob Medida e Montagem de Móveis em Geral",
+    "Encanador e Instalações Hidráulicas",
+    "Automação Residencial e Alexa",
+    "Instalações em Geral (Box, Espelhos, Suporte TV, Cooktop, Gás)"
+  ]
+}
