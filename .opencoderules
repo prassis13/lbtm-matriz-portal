@@ -1,0 +1,25 @@
+# Diretrizes do Projeto LBTM Incorporadora - Portal Matriz
+
+## 1. Grade Fixa dos 26 Bairros
+- Exibir TODOS os 26 bairros oficiais em uma grade estática (não marquee)
+- Tags com contorno metálico/dourado, fundo escuro, alta legibilidade no mobile
+- Bairros: Alphaville, Barueri, Vila Nova Conceição, Moema, Itaim Bibi, Jardim Europa, Vila Madalena, Morumbi, Santo Amaro, Vila Andrade, Vila Mascote, Perdizes, Barra Funda, Aclimação, Mooca, Ipiranga, Tatuapé, Carrão, Vila Matilde, Vila Prudente, Freguesia do Ó, Vila Maria, Jacarepaguá, Paulistano, Oásis, Região Metropolitana de SP
+
+## 2. 4 Pilares e 4 Compromissos
+- Remover ícones SVG planos/genéricos
+- Aplicar bloco de contraste com fundo escuro corporativo/metálico
+- Destacar visualmente os 4 compromissos institucionais
+
+## 3. Garantia Contratual Destacada
+- "6 Meses para Serviços Gerais" (pintura, elétrica, drywall, ar-condicionado, limpeza)
+- "2 Anos para Móveis Planejados" (ferragens amortecidas, marcenaria nobre)
+- Visual de destaque com selo/bloco de contraste
+
+## 4. Mídias das 6 Especialidades
+- Cards com imagens/renders condizentes com segmento de alto padrão
+- /pintura/, /eletrica/, /moveis-planejados/, /ar-condicionado/, /drywall-gesso/, /limpeza-pos-obra/
+
+## 5. Deploy e Versionamento
+- Commit no GitHub (branch main)
+- Deploy na Vercel (produção)
+- Tag de versão para backup

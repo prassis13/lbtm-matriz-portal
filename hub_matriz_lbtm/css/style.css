@@ -1830,6 +1830,159 @@ p { color: var(--cream-3); }
 }
 
 /* =============================================================
+   NEIGHBORHOODS GRID (26 bairros fixos)
+   ============================================================= */
+.neighborhoods__title {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--cream);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.neighborhoods__title em {
+  font-style: italic;
+  color: var(--gold);
+}
+.neighborhoods__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.neighborhood-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  text-align: center;
+  transition: all 0.3s var(--ease);
+  white-space: nowrap;
+}
+.neighborhood-tag:hover {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.15);
+}
+@media (max-width: 640px) {
+  .neighborhoods__grid { grid-template-columns: repeat(2, 1fr); }
+  .neighborhood-tag { font-size: 12px; padding: 10px 12px; }
+}
+
+/* =============================================================
+   PILLARS DARK BLOCK
+   ============================================================= */
+.pillars-dark-block {
+  background: var(--noir-2);
+  border: 1px solid var(--hairline-light);
+  border-radius: 4px;
+  padding: clamp(32px, 4vw, 48px);
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.pillars-dark-block .differentials__grid {
+  border-top: none;
+}
+.pillars-dark-block .differential {
+  border-right: 1px solid var(--hairline-dark);
+  padding: 24px 28px;
+  background: transparent;
+}
+.pillars-dark-block .differential:last-child { border-right: none; }
+.pillars-dark-block .differential__mark { color: var(--gold); }
+.pillars-dark-block .differential__title { color: var(--cream); }
+.pillars-dark-block .differential__text { color: var(--cream-3); }
+@media (max-width: 900px) {
+  .pillars-dark-block .differentials__grid { grid-template-columns: repeat(2, 1fr); }
+  .pillars-dark-block .differential:nth-child(2n) { border-right: none; }
+  .pillars-dark-block .differential:nth-child(-n+2) { border-bottom: 1px solid var(--hairline-dark); }
+}
+@media (max-width: 520px) {
+  .pillars-dark-block .differentials__grid { grid-template-columns: 1fr; }
+  .pillars-dark-block .differential { border-right: none; border-bottom: 1px solid var(--hairline-dark); padding: 20px 0; }
+  .pillars-dark-block .differential:last-child { border-bottom: none; }
+}
+
+/* =============================================================
+   GUARANTEE SEALS ROW
+   ============================================================= */
+.guarantee__seals-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(32px, 5vw, 64px);
+  margin-bottom: clamp(48px, 6vw, 80px);
+  flex-wrap: wrap;
+}
+.guarantee__seal {
+  flex: 0 0 auto;
+}
+.guarantee__seal-circle {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--cream-2);
+}
+.guarantee__seal-circle::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.guarantee__seal-num {
+  font-family: var(--serif);
+  font-size: clamp(56px, 7vw, 88px);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--noir);
+  letter-spacing: -0.04em;
+}
+.guarantee__seal-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--noir);
+  font-weight: 500;
+}
+.guarantee__seal-sub {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+  color: rgba(10, 10, 10, 0.6);
+  letter-spacing: 0.02em;
+}
+.guarantee__seal svg {
+  position: absolute;
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  animation: rotate-slow 60s linear infinite;
+}
+@media (max-width: 640px) {
+  .guarantee__seals-row { gap: 24px; }
+  .guarantee__seal-circle { max-width: 200px; }
+  .guarantee__seal-num { font-size: 48px; }
+}
+
+/* =============================================================
    ANIMAÇÕES DE REVEAL
    Fallbacks em camadas:
    1. Sem JS (html.no-js) → sempre visível
