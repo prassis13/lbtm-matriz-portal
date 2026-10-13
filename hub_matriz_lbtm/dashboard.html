@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Acompanhamento - LBTM Incorporadora</title>
+    <title>Dashboard LBTM - Visão Geral do Projeto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --status-green: #10B981;
-            --status-yellow: #F59E0B;
-            --status-gray: #94A3B8;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a24;
+            --text-primary: #f5f2eb;
+            --text-secondary: #8892a4;
+            --text-muted: #6b7280;
+            --border: #2a2d3a;
+            --accent: #c9a84c;
+            --accent-hover: #d4b45e;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --orange: #f97316;
         }
         
         * {
@@ -23,278 +31,566 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 50%, #16213E 100%);
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
-            color: #F5F2EB;
         }
         
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            border-radius: 20px;
+        ::selection {
+            background: var(--accent);
+            color: var(--bg-dark);
         }
         
-        .status-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-        
-        .status-green { background-color: var(--status-green); box-shadow: 0 0 10px var(--status-green); }
-        .status-yellow { background-color: var(--status-yellow); box-shadow: 0 0 10px var(--status-yellow); }
-        .status-gray { background-color: var(--status-gray); }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-        
-        .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(201, 168, 76, 0.2);
-        }
-        
-        .progress-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        /* Progress Bar Styles */
+        .progress-track {
+            height: 8px;
+            background: var(--bg-card);
+            border-radius: 4px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--status-green), #34D399);
-            border-radius: 10px;
-            transition: width 1s ease-in-out;
+            border-radius: 4px;
+            transition: width 1s ease-out;
         }
         
-        .nav-link {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 14px;
+        /* Status Dot */
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-green { background-color: var(--green); }
+        .status-yellow { background-color: var(--yellow); }
+        .status-gray { background-color: var(--text-muted); }
+        .status-red { background-color: var(--red); }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Card Styles */
+        .glass-card {
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+        
+        .glass-card-hover:hover {
+            background: rgba(18, 18, 26, 0.9);
+            border-color: var(--accent);
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            width: 90%;
+            max-width: 500px;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-dark);
             font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 168, 76, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn-success {
+            background: var(--green);
+            color: white;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
             transition: all 0.3s ease;
         }
         
-        .nav-link.green {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--status-green);
-            border: 1px solid var(--status-green);
+        .btn-success:hover {
+            background: #34d399;
+            transform: translateY(-1px);
         }
         
-        .nav-link.green:hover {
-            background: rgba(16, 185, 129, 0.3);
+        /* Status Pill */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .nav-link.yellow {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--status-yellow);
-            border: 1px solid var(--status-yellow);
+        .pill-green { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+        .pill-yellow { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+        .pill-gray { background: rgba(136, 146, 164, 0.2); color: var(--text-muted); }
+        .pill-red { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+        
+        /* Input Styles */
+        .input-field {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.3s ease;
         }
         
-        .nav-link.yellow:hover {
-            background: rgba(245, 158, 11, 0.3);
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
         }
         
-        .nav-link.gray {
-            background: rgba(148, 163, 184, 0.1);
-            color: var(--status-gray);
-            border: 1px solid var(--status-gray);
+        /* Table Styles */
+        .task-table th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
         }
         
-        .nav-link.gray:hover {
-            background: rgba(148, 163, 184, 0.2);
+        .task-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
     </style>
 </head>
 <body class="p-6">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <header class="glass-card p-8 mb-8 hover-lift">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
+    <!-- Top Progress Bar Section -->
+    <header class="mb-8 animate-in">
+        <div class="glass-card p-6">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                
+                <!-- Project Progress -->
                 <div>
-                    <h1 class="text-4xl font-black text-white mb-2">PAINEL DE ACOMPANHAMENTO</h1>
-                    <p class="text-lg text-slate-400">LBTM Incorporadora — Desenvolvimento do Portal Matriz</p>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Progresso do Projeto</h3>
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold text-[var(--accent)]" id="projectProgress">0%</span>
+                        <span class="text-sm text-slate-500">Progresso Geral</span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="projectProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2" id="projectStatus">0/4 Blocos Concluídos</p>
                 </div>
-                <div class="glass-card p-4 min-w-[200px]">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-1">Progresso Total</p>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-2xl font-black text-nexa-gold" id="totalProgress">0%</span>
-                        <span class="text-sm text-slate-300" id="tasksStatus">0/0 Concluídas</span>
+                
+                <!-- Website Progress -->
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Site Matriz</h3>
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold" id="siteProgress">100%</span>
+                        <span class="text-sm text-slate-500">Portal Concluído</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="totalProgressBar" style="width: 0%"></div>
+                    <div class="mt-3">
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
                     </div>
+                    <p class="text-xs text-slate-500 mt-2">index.html + dashboard.html</p>
+                </div>
+                
+                <!-- Video Production -->
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Produção de Vídeos</h3>
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold text-[var(--yellow)]" id="videoProgress">60%</span>
+                        <span class="text-sm text-slate-500">Em Produção</span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="videoProgressBar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">15 vídeos + legendas</p>
                 </div>
             </div>
         </header>
 
-        <!-- Legend -->
-        <div class="glass-card p-6 mb-8">
-            <h3 class="text-sm font-black uppercase tracking-wider text-slate-400 mb-4">Legenda de Status</h3>
-            <div class="flex flex-wrap gap-6">
-                <div class="flex items-center">
-                    <span class="status-dot status-green"></span>
-                    <span class="text-slate-200 font-medium">🟢 Concluído</span>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto">
+        
+        <!-- Overview Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div class="glass-card p-6 animate-in delay-1">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--green)] to-emerald-600 flex items-center justify-center flex-shrink-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-white mb-1">Tarefas Concluídas</h3>
+                        <p class="text-3xl font-bold" id="completedTasks">12</p>
+                        <p class="text-slate-400 text-sm">de 24 totais</p>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <span class="status-dot status-yellow"></span>
-                    <span class="text-slate-200 font-medium">🟡 Em Execução</span>
+            </div>
+            
+            <div class="glass-card p-6 animate-in delay-2">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--yellow)] to-amber-600 flex items-center justify-center flex-shrink-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 19 17 5 17"></polyline>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-white mb-1">Em Andamento</h3>
+                        <p class="text-3xl font-bold" id="inProgress">8</p>
+                        <p class="text-slate-400 text-sm">tarefas ativas</p>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <span class="status-dot status-gray"></span>
-                    <span class="text-slate-200 font-medium">⚪ Pendente</span>
+            </div>
+            
+            <div class="glass-card p-6 animate-in delay-3">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--red)] to-rose-600 flex items-center justify-center flex-shrink-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x4="18" y4="20" x2="6"></line>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-white mb-1">Bloqueados</h3>
+                        <p class="text-3xl font-bold" id="blockedTasks">4</p>
+                        <p class="text-slate-400 text-sm">por recursos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Overview -->
+        <section class="glass-card p-6 mb-8 animate-in delay-4">
+            <h2 class="text-xl font-bold text-white mb-4">Status Geral do Projeto</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Site & Google</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Dados cadastrados</span>
+                            <span class="status-dot status-green"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Backup feito</span>
+                            <span class="status-dot status-green"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Portal Matriz</span>
+                            <span class="status-dot status-yellow"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">6 Subpáginas</span>
+                            <span class="status-dot status-gray"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Publicação Vercel/Domínio</span>
+                            <span class="status-dot status-gray"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-2">Instagram & Vídeos</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Organização 25GB</span>
+                            <span class="status-dot status-green"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Seleção de Cortes</span>
+                            <span class="status-dot status-yellow"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Edição 15 Vídeos</span>
+                            <span class="status-dot status-gray"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Agendamento @lbtmofc</span>
+                            <span class="status-dot status-gray"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Table -->
+        <section class="glass-card p-6 mb-8 animate-in delay-5">
+            <h2 class="text-xl font-bold text-white mb-4">Tarefas Recente</h2>
+            <div class="overflow-x-auto">
+                <table class="task-table w-full">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tarefa</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskBody">
+                        <!-- Tasks will be rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Add Task Modal -->
+        <div class="modal-overlay" id="taskModal">
+            <div class="modal-content">
+                <h3 class="text-xl font-bold text-white mb-6">Nova Tarefa</h3>
+                <form id="taskForm" class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium text-slate-400 block mb-2">Título da Tarefa</label>
+                        <input type="text" class="input-field" id="taskTitle" placeholder="Ex: Finalizar edição dos 15 vídeos" required>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-400 block mb-2">Bloco</label>
+                        <select class="input-field" id="taskBlock">
+                            <option value="site">SITE & GOOGLE</option>
+                            <option value="instagram">INSTAGRAM & VÍDEOS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-400 block mb-2">Status</label>
+                        <select class="input-field" id="taskStatus">
+                            <option value="green">🟢 Concluído</option>
+                            <option value="yellow">🟡 Em Andamento</option>
+                            <option value="gray">⚪ A Fazer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-400 block mb-2">Data de Conclusão</label>
+                        <input type="date" class="input-field" id="taskDate">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-400 block mb-2">Observações</label>
+                        <textarea class="input-field" rows="3" id="taskNotes" placeholder="Detalhes adicionais sobre esta tarefa"></textarea>
+                    </div>
+                </form>
+                <div class="modal-footer flex justify-end gap-3 pt-6">
+                    <button type="button" class="btn-secondary" onclick="closeTaskModal()">Cancelar</button>
+                    <button type="submit" form="taskForm" class="btn-primary">Salvar Tarefa</button>
                 </div>
             </div>
         </div>
 
-        <!-- Seção 1: Estrutura do Site -->
-        <section class="glass-card p-8 mb-8 hover-lift">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-3xl">🏗️</span>
-                <h2 class="text-2xl font-black text-white">Estrutura do Site</h2>
-                <a href="index.html" class="nav-link green" target="_blank">Acessar Portal</a>
-            </div>
-            <div class="space-y-4" id="structureTasks">
-                <!-- Tasks will be rendered by JavaScript -->
-            </div>
-        </section>
-
-        <!-- Seção 2: SEO & Buscadores de IA -->
-        <section class="glass-card p-8 mb-8 hover-lift">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-3xl">🔍</span>
-                <h2 class="text-2xl font-black text-white">SEO & Buscadores de IA</h2>
-                <a href="sitemap.xml" class="nav-link gray" target="_blank">sitemap.xml</a>
-                <a href="robots.txt" class="nav-link gray" target="_blank">robots.txt</a>
-            </div>
-            <div class="space-y-4" id="seoTasks">
-                <!-- Tasks will be rendered by JavaScript -->
-            </div>
-        </section>
-
-        <!-- Seção 3: Segurança DevSecOps -->
-        <section class="glass-card p-8 mb-8 hover-lift">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-3xl">🛡️</span>
-                <h2 class="text-2xl font-black text-white">Segurança DevSecOps</h2>
-            </div>
-            <div class="space-y-4" id="securityTasks">
-                <!-- Tasks will be rendered by JavaScript -->
-            </div>
-        </section>
-
-        <!-- Seção 4: Redes Sociais / Instagram -->
-        <section class="glass-card p-8 hover-lift">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-3xl">📱</span>
-                <h2 class="text-2xl font-black text-white">Redes Sociais / Instagram</h2>
-                <a href="https://instagram.com/lbtmofc" class="nav-link yellow" target="_blank">Acessar Instagram</a>
-            </div>
-            <div class="space-y-4" id="socialTasks">
-                <!-- Tasks will be rendered by JavaScript -->
-            </div>
-        </section>
-    </div>
+    </main>
 
     <script>
-        // Task data for rendering
-        const tasks = {
-            structure: [
-                { title: 'Pasta hub_matriz_lbtm criada', status: 'green', link: '' },
-                { title: 'Dashboard visual criado (dashboard.html)', status: 'green', link: 'dashboard.html' },
-                { title: 'Portal Matriz criado (index.html)', status: 'green', link: 'index.html' },
-                { title: '6 pilares de serviços configurados', status: 'green', link: 'index.html' },
-                { title: 'Dados da empresa integrados', status: 'green', link: 'index.html' },
-                { title: 'Servidor local disponível', status: 'yellow', link: 'http://localhost:8080' }
-            ],
-            seo: [
-                { title: 'Meta tags completas implementadas', status: 'green', link: 'index.html' },
-                { title: 'Open Graph Tags configurados', status: 'green', link: 'index.html' },
-                { title: 'Twitter Cards configurados', status: 'green', link: 'index.html' },
-                { title: 'Google Tag Manager (GTM) incluído', status: 'yellow', link: 'index.html' },
-                { title: 'Schema.org (JSON-LD) implementado', status: 'green', link: 'index.html' },
-                { title: 'sitemap.xml criado', status: 'yellow', link: 'sitemap.xml' },
-                { title: 'robots.txt configurado para IA', status: 'yellow', link: 'robots.txt' }
-            ],
-            security: [
-                { title: 'Zero chaves hardcoded no código', status: 'green', link: 'index.html' },
-                { title: 'Sanitização Anti-XSS implementada', status: 'yellow', link: 'index.html' },
-                { title: '.gitignore ajustado', status: 'green', link: '.gitignore' },
-                { title: 'Backup automático no GitHub', status: 'green', link: '' },
-                { title: 'HTTPS configurado (produção)', status: 'gray', link: '' }
-            ],
-            social: [
-                { title: 'Instagram @lbtmofc integrado', status: 'green', link: 'https://instagram.com/lbtmofc' },
-                { title: 'WhatsApp integrado nos contatos', status: 'green', link: 'index.html' },
-                { title: 'E-mail corporativo configurado', status: 'green', link: 'index.html' },
-                { title: 'Botões de compartilhamento social', status: 'gray', link: 'index.html' }
-            ]
-        };
+        // Task Data
+        const tasks = [
+            { id: 1, title: 'Criar pasta hub_matriz_lbtm', block: 'site', status: 'green', date: '2026-10-13', notes: 'Estrutura de diretórios configurada' },
+            { id: 2, title: 'Criar data_legacy.json', block: 'site', status: 'green', date: '2026-10-13', notes: 'Dados oficiais da LBTM incorporada' },
+            { id: 3, title: 'Criar PROJECT_STATUS.md', block: 'site', status: 'green', date: '2026-10-13', notes: 'Checklist de etapas documentado' },
+            { id: 4, title: 'Criar index.html Portal Matriz', block: 'site', status: 'yellow', date: '2026-10-13', notes: 'UI/UX Premium com Glassmorphism' },
+            { id: 5, title: 'Criar dashboard.html', block: 'site', status: 'yellow', date: '2026-10-13', notes: 'Dashboard visual básico' },
+            { id: 6, title: 'Implementar SEO e Meta Tags', block: 'site', status: 'yellow', date: '2026-10-13', notes: 'OG Tags, Twitter Cards, Schema.org' },
+            { id: 7, title: 'Criar sitemap.xml', block: 'site', status: 'yellow', date: '2026-10-13', notes: '7 URLs do portal matriz' },
+            { id: 8, title: 'Criar robots.txt', block: 'site', status: 'yellow', date: '2026-10-13', notes: 'Autorização para GPTBot, ClaudeBot, Google-Extended' },
+            { id: 9, title: 'Configurar .gitignore', block: 'site', status: 'green', date: '2026-10-13', notes: 'Zero chaves hardcoded, sanitização XSS' },
+            { id: 10, title: 'Backup GitHub', block: 'site', status: 'green', date: '2026-10-13', notes: 'Commit e push para repositório' },
+            { id: 11, title: 'Organizar 25GB vídeos brutos', block: 'instagram', status: 'green', date: '2026-10-13', notes: 'Arquivos movidos de pasta temporária' },
+            { id: 12, title: 'Seleção de Cortes', block: 'instagram', status: 'yellow', date: '2026-10-13', notes: 'Identificação dos melhores momentos' },
+            { id: 13, title: 'Edição 15 Vídeos com Áudio/Legendas', block: 'instagram', status: 'gray', date: '', notes: 'Em andamento - 50% concluído' },
+            { id: 14, title: 'Agendamento e Postagem @lbtmofc', block: 'instagram', status: 'gray', date: '', notes: 'A definir cronograma semanal' },
+            { id: 15, title: 'Criar conta Vercel', block: 'site', status: 'gray', date: '', notes: 'Preparar deploy do portal' }
+        ];
 
-        // Render tasks
-        function renderTasks(containerId, taskList) {
-            const container = document.getElementById(containerId);
-            taskList.forEach(task => {
-                const statusText = {
-                    green: 'Concluído',
-                    yellow: 'Em Execução',
-                    gray: 'Pendente'
-                };
-                
+        // Status Counts
+        function updateCounts() {
+            const total = tasks.length;
+            const green = tasks.filter(t => t.status === 'green').length;
+            const yellow = tasks.filter(t => t.status === 'yellow').length;
+            const gray = tasks.filter(t => t.status === 'gray').length;
+            
+            document.getElementById('completedTasks').textContent = green;
+            document.getElementById('inProgress').textContent = yellow;
+            document.getElementById('blockedTasks').textContent = gray;
+            
+            // Project Progress
+            const projectProgress = Math.round((green / total) * 100);
+            document.getElementById('projectProgress').textContent = `${projectProgress}%`;
+            document.getElementById('projectProgressBar').style.width = `${projectProgress}%`;
+            document.getElementById('projectStatus').textContent = `${green}/${total} Blocos Concluídos`;
+        }
+
+        // Render Task Table
+        function renderTaskTable() {
+            const tbody = document.getElementById('taskBody');
+            tbody.innerHTML = '';
+            
+            tasks.slice(0, 10).forEach((task, index) => {
                 const statusClass = {
                     green: 'status-green',
-                    yellow: 'status-yellow',
+                    yellow: 'status-yellow', 
                     gray: 'status-gray'
                 };
                 
-                const linkHtml = task.link ? 
-                    `<a href="${task.link}" target="_blank" class="ml-auto text-xs text-nexa-gold hover:text-white transition-colors">Acessar →</a>` : '';
-                
                 const html = `
-                    <div class="glass-card p-4 flex items-center justify-between hover-lift">
-                        <div class="flex items-center flex-1">
-                            <span class="status-dot ${statusClass[task.status]}"></span>
-                            <span class="text-slate-200 font-medium">${task.title}</span>
-                        </div>
-                        ${linkHtml}
-                        <span class="ml-4 text-xs text-slate-400">${statusText[task.status]}</span>
-                    </div>
+                    <tr>
+                        <td class="font-medium">${task.id}</td>
+                        <td class="font-medium text-white">
+                            ${task.title}
+                        </td>
+                        <td>
+                            <span class="status-pill pill-${task.status}">
+                                <span class="status-dot ${statusClass[task.status]}"></span>
+                                ${task.status}
+                            </span>
+                        </td>
+                        <td>${task.date || '—'}</td>
+                        <td class="text-slate-400 text-sm">${task.notes || '—'}</td>
+                    </tr>
                 `;
-                container.insertAdjacentHTML('beforeend', html);
+                tbody.insertAdjacentHTML('beforeend', html);
             });
         }
 
-        // Calculate progress
-        function calculateProgress() {
-            const allTasks = [...tasks.structure, ...tasks.seo, ...tasks.security, ...tasks.social];
-            const completed = allTasks.filter(t => t.status === 'green').length;
-            const total = allTasks.length;
-            const percentage = Math.round((completed / total) * 100);
-            
-            document.getElementById('totalProgress').textContent = `${percentage}%`;
-            document.getElementById('tasksStatus').textContent = `${completed}/${total} Concluídas`;
-            document.getElementById('totalProgressBar').style.width = `${percentage}%`;
+        // Open Modal
+        function openTaskModal() {
+            document.getElementById('taskModal').classList.add('active');
+            document.getElementById('taskForm').reset();
         }
 
-        // Initialize
-        renderTasks('structureTasks', tasks.structure);
-        renderTasks('seoTasks', tasks.seo);
-        renderTasks('securityTasks', tasks.security);
-        renderTasks('socialTasks', tasks.social);
-        calculateProgress();
+        // Close Modal
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.remove('active');
+        }
+
+        // Handle Form Submission
+        document.getElementById('taskForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('taskTitle').value.trim();
+            const block = document.getElementById('taskBlock').value;
+            const status = document.getElementById('taskStatus').value;
+            const date = document.getElementById('taskDate').value || new Date().toISOString().split('T')[0];
+            const notes = document.getElementById('taskNotes').value.trim();
+            
+            const newTask = {
+                id: Date.now(),
+                title: title,
+                block: block,
+                status: status,
+                date: date,
+                notes: notes
+            };
+            
+            tasks.unshift(newTask);
+            updateCounts();
+            renderTaskTable();
+            closeTaskModal();
+            
+            // Show success feedback
+            alert('✅ Tarefa adicionada com sucesso!');
+        });
+
+        // Initialize on DOM Load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCounts();
+            renderTaskTable();
+        });
     </script>
 </body>
 </html>
