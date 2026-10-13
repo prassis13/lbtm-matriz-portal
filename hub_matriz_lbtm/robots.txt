@@ -1,0 +1,33 @@
+# Robots.txt - LBTM Incorporadora
+# Autoriza todos os robôs de IA e buscadores
+
+User-agent: *
+Allow: /
+
+# Especificamente para IAs modernas
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap
+Sitemap: https://www.lbtmincorporadora.com.br/sitemap.xml

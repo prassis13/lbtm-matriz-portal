@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Acompanhamento - LBTM Incorporadora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --status-green: #10B981;
+            --status-yellow: #F59E0B;
+            --status-gray: #94A3B8;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 50%, #16213E 100%);
+            min-height: 100vh;
+            color: #F5F2EB;
+        }
+        
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 20px;
+        }
+        
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-green { background-color: var(--status-green); box-shadow: 0 0 10px var(--status-green); }
+        .status-yellow { background-color: var(--status-yellow); box-shadow: 0 0 10px var(--status-yellow); }
+        .status-gray { background-color: var(--status-gray); }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(201, 168, 76, 0.2);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--status-green), #34D399);
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link.green {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--status-green);
+            border: 1px solid var(--status-green);
+        }
+        
+        .nav-link.green:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+        
+        .nav-link.yellow {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--status-yellow);
+            border: 1px solid var(--status-yellow);
+        }
+        
+        .nav-link.yellow:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+        
+        .nav-link.gray {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--status-gray);
+            border: 1px solid var(--status-gray);
+        }
+        
+        .nav-link.gray:hover {
+            background: rgba(148, 163, 184, 0.2);
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="glass-card p-8 mb-8 hover-lift">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-black text-white mb-2">PAINEL DE ACOMPANHAMENTO</h1>
+                    <p class="text-lg text-slate-400">LBTM Incorporadora — Desenvolvimento do Portal Matriz</p>
+                </div>
+                <div class="glass-card p-4 min-w-[200px]">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-1">Progresso Total</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-2xl font-black text-nexa-gold" id="totalProgress">0%</span>
+                        <span class="text-sm text-slate-300" id="tasksStatus">0/0 Concluídas</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="totalProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Legend -->
+        <div class="glass-card p-6 mb-8">
+            <h3 class="text-sm font-black uppercase tracking-wider text-slate-400 mb-4">Legenda de Status</h3>
+            <div class="flex flex-wrap gap-6">
+                <div class="flex items-center">
+                    <span class="status-dot status-green"></span>
+                    <span class="text-slate-200 font-medium">🟢 Concluído</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="status-dot status-yellow"></span>
+                    <span class="text-slate-200 font-medium">🟡 Em Execução</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="status-dot status-gray"></span>
+                    <span class="text-slate-200 font-medium">⚪ Pendente</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 1: Estrutura do Site -->
+        <section class="glass-card p-8 mb-8 hover-lift">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🏗️</span>
+                <h2 class="text-2xl font-black text-white">Estrutura do Site</h2>
+                <a href="index.html" class="nav-link green" target="_blank">Acessar Portal</a>
+            </div>
+            <div class="space-y-4" id="structureTasks">
+                <!-- Tasks will be rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção 2: SEO & Buscadores de IA -->
+        <section class="glass-card p-8 mb-8 hover-lift">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🔍</span>
+                <h2 class="text-2xl font-black text-white">SEO & Buscadores de IA</h2>
+                <a href="sitemap.xml" class="nav-link gray" target="_blank">sitemap.xml</a>
+                <a href="robots.txt" class="nav-link gray" target="_blank">robots.txt</a>
+            </div>
+            <div class="space-y-4" id="seoTasks">
+                <!-- Tasks will be rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção 3: Segurança DevSecOps -->
+        <section class="glass-card p-8 mb-8 hover-lift">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">🛡️</span>
+                <h2 class="text-2xl font-black text-white">Segurança DevSecOps</h2>
+            </div>
+            <div class="space-y-4" id="securityTasks">
+                <!-- Tasks will be rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção 4: Redes Sociais / Instagram -->
+        <section class="glass-card p-8 hover-lift">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">📱</span>
+                <h2 class="text-2xl font-black text-white">Redes Sociais / Instagram</h2>
+                <a href="https://instagram.com/lbtmofc" class="nav-link yellow" target="_blank">Acessar Instagram</a>
+            </div>
+            <div class="space-y-4" id="socialTasks">
+                <!-- Tasks will be rendered by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Task data for rendering
+        const tasks = {
+            structure: [
+                { title: 'Pasta hub_matriz_lbtm criada', status: 'green', link: '' },
+                { title: 'Dashboard visual criado (dashboard.html)', status: 'green', link: 'dashboard.html' },
+                { title: 'Portal Matriz criado (index.html)', status: 'green', link: 'index.html' },
+                { title: '6 pilares de serviços configurados', status: 'green', link: 'index.html' },
+                { title: 'Dados da empresa integrados', status: 'green', link: 'index.html' },
+                { title: 'Servidor local disponível', status: 'yellow', link: 'http://localhost:8080' }
+            ],
+            seo: [
+                { title: 'Meta tags completas implementadas', status: 'green', link: 'index.html' },
+                { title: 'Open Graph Tags configurados', status: 'green', link: 'index.html' },
+                { title: 'Twitter Cards configurados', status: 'green', link: 'index.html' },
+                { title: 'Google Tag Manager (GTM) incluído', status: 'yellow', link: 'index.html' },
+                { title: 'Schema.org (JSON-LD) implementado', status: 'green', link: 'index.html' },
+                { title: 'sitemap.xml criado', status: 'yellow', link: 'sitemap.xml' },
+                { title: 'robots.txt configurado para IA', status: 'yellow', link: 'robots.txt' }
+            ],
+            security: [
+                { title: 'Zero chaves hardcoded no código', status: 'green', link: 'index.html' },
+                { title: 'Sanitização Anti-XSS implementada', status: 'yellow', link: 'index.html' },
+                { title: '.gitignore ajustado', status: 'green', link: '.gitignore' },
+                { title: 'Backup automático no GitHub', status: 'green', link: '' },
+                { title: 'HTTPS configurado (produção)', status: 'gray', link: '' }
+            ],
+            social: [
+                { title: 'Instagram @lbtmofc integrado', status: 'green', link: 'https://instagram.com/lbtmofc' },
+                { title: 'WhatsApp integrado nos contatos', status: 'green', link: 'index.html' },
+                { title: 'E-mail corporativo configurado', status: 'green', link: 'index.html' },
+                { title: 'Botões de compartilhamento social', status: 'gray', link: 'index.html' }
+            ]
+        };
+
+        // Render tasks
+        function renderTasks(containerId, taskList) {
+            const container = document.getElementById(containerId);
+            taskList.forEach(task => {
+                const statusText = {
+                    green: 'Concluído',
+                    yellow: 'Em Execução',
+                    gray: 'Pendente'
+                };
+                
+                const statusClass = {
+                    green: 'status-green',
+                    yellow: 'status-yellow',
+                    gray: 'status-gray'
+                };
+                
+                const linkHtml = task.link ? 
+                    `<a href="${task.link}" target="_blank" class="ml-auto text-xs text-nexa-gold hover:text-white transition-colors">Acessar →</a>` : '';
+                
+                const html = `
+                    <div class="glass-card p-4 flex items-center justify-between hover-lift">
+                        <div class="flex items-center flex-1">
+                            <span class="status-dot ${statusClass[task.status]}"></span>
+                            <span class="text-slate-200 font-medium">${task.title}</span>
+                        </div>
+                        ${linkHtml}
+                        <span class="ml-4 text-xs text-slate-400">${statusText[task.status]}</span>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        // Calculate progress
+        function calculateProgress() {
+            const allTasks = [...tasks.structure, ...tasks.seo, ...tasks.security, ...tasks.social];
+            const completed = allTasks.filter(t => t.status === 'green').length;
+            const total = allTasks.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('totalProgress').textContent = `${percentage}%`;
+            document.getElementById('tasksStatus').textContent = `${completed}/${total} Concluídas`;
+            document.getElementById('totalProgressBar').style.width = `${percentage}%`;
+        }
+
+        // Initialize
+        renderTasks('structureTasks', tasks.structure);
+        renderTasks('seoTasks', tasks.seo);
+        renderTasks('securityTasks', tasks.security);
+        renderTasks('socialTasks', tasks.social);
+        calculateProgress();
+    </script>
+</body>
+</html>
