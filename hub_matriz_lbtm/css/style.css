@@ -2595,9 +2595,14 @@ p { color: var(--cream-3); }
   .compromissos-block {
     padding: 24px;
   }
+  .compromissos-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
   .compromisso {
     flex-direction: column;
     gap: 8px;
+    padding: 16px;
   }
   .compromisso__num {
     margin-top: 0;
